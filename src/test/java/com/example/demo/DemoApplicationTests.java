@@ -58,4 +58,28 @@ public class DemoApplicationTests {
         QuickSort.sort(nums);
         log.info("排序后：" + Arrays.toString(nums));
     }
+
+    @Test
+    public void testRadixSort() {
+        int[] nums = IntArrayUtil.initIntArrays(20, 100000);
+        log.info("排序前：" + Arrays.toString(nums));
+        RadixSort.sort(nums);
+        log.info("排序后：" + Arrays.toString(nums));
+    }
+
+    @Test
+    public void testSelectSort() {
+        int[] nums = IntArrayUtil.initIntArrays(10, 100);
+        log.info("排序前：" + Arrays.toString(nums));
+        SelectSort.sort(nums);
+        log.info("排序后：" + Arrays.toString(nums));
+    }
+
+    @Test
+    public void testShellSort() {
+        int[] nums = IntArrayUtil.initIntArrays(9, 100);
+        log.info("排序前：" + Arrays.toString(nums));
+        ShellSort.sort(nums);
+        log.info("排序后：" + Arrays.toString(nums));
+    }
 }
