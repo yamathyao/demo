@@ -1,10 +1,16 @@
 package com.example.demo;
 
+import com.example.demo.commands.CreateOrderCommand;
+import com.example.demo.cqs.Bus;
+import com.example.demo.model.OrderInfoModel;
+import com.example.demo.service.DemoService;
 import com.example.demo.sort.*;
 import com.example.demo.utils.IntArrayUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -14,6 +20,12 @@ import java.util.Arrays;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class DemoApplicationTests {
+
+    @Autowired
+    private DemoService demoService;
+
+    @Autowired
+    private Bus bus;
 
     @Test
     public void contextLoads() {
@@ -81,5 +93,26 @@ public class DemoApplicationTests {
         log.info("排序前：" + Arrays.toString(nums));
         ShellSort.sort(nums);
         log.info("排序后：" + Arrays.toString(nums));
+    }
+
+    @Test
+    public void testAop() {
+        demoService.goTest(new String[]{"1", "2"});
+    }
+
+    @Test
+    public void testBusCommand() {
+        CreateOrderCommand command = new CreateOrderCommand();
+        command.setOrderId("123456");
+        command.setProductName("苹果");
+        command.setStatus("已发货");
+        OrderInfoModel orderInfoModel = bus.executeCommand(command);
+        Assert.assertNotNull(orderInfoModel);
+        System.out.println(orderInfoModel);
+    }
+
+    @Test
+    public void test() {
+        demoService.demo资金方开户();
     }
 }

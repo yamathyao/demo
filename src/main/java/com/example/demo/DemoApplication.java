@@ -13,4 +13,14 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
+//    @Bean
+//    public Registry registry(ApplicationContext applicationContext) {
+//        return new Registry(applicationContext);
+//    }
+//
+//    @Bean
+//    public Bus commandBus(Registry registry) {
+//        return new SpringBus(registry);
+//    }
+
 }
