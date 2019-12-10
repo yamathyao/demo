@@ -17,4 +17,13 @@ public class CreateOrderCommand implements Command<OrderInfoModel> {
     private String productName;
 
     private String status;
+
+    public CreateOrderCommand() {
+    }
+
+    public CreateOrderCommand(String orderId, String productName, String status) {
+        this.orderId = orderId;
+        this.productName = productName;
+        this.status = status;
+    }
 }

@@ -5,20 +5,32 @@ import com.example.demo.cqs.Bus;
 import com.example.demo.model.OrderInfoModel;
 import com.example.demo.service.DemoService;
 import com.example.demo.sort.*;
+import com.example.demo.springbatch.BatchConfig;
+import com.example.demo.springbatch.BatchJobConfig;
 import com.example.demo.utils.IntArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.launch.NoSuchJobException;
+import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = DemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = {DemoApplication.class, DemoApplicationTests.BatchTestConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class DemoApplicationTests {
 
     @Autowired
@@ -26,6 +38,9 @@ public class DemoApplicationTests {
 
     @Autowired
     private Bus bus;
+
+    @Autowired
+    private JobLauncherTestUtils jobLauncherTestUtils;
 
     @Test
     public void contextLoads() {
@@ -114,5 +129,27 @@ public class DemoApplicationTests {
     @Test
     public void test() {
         demoService.demo资金方开户();
+    }
+
+//    Spring batch
+
+    @Test
+    public void testSpringBatch() throws Exception {
+        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
+        assertThat(jobExecution.getExitStatus().getExitCode(), is("COMPLETED"));
+    }
+
+    @Configuration
+    @Import({BatchConfig.class, BatchJobConfig.class})
+    static class BatchTestConfig {
+        @Autowired
+        private Job batchJob;
+
+        @Bean
+        JobLauncherTestUtils jobLauncherTestUtils() throws NoSuchJobException {
+            JobLauncherTestUtils jobLauncherTestUtils = new JobLauncherTestUtils();
+            jobLauncherTestUtils.setJob(batchJob);
+            return jobLauncherTestUtils;
+        }
     }
 }
